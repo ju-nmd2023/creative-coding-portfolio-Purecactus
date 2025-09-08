@@ -1,7 +1,17 @@
 [
   {
     "file": "experiments/week1.js",
-    "name": "Week 1 - Artwork recreation",
+    "name": "Week 1 - Artwork recreation - #1",
+    "description": "This week, I have tried to recreate the artpiece Gravel by Georg Ness, using randomness"
+  },
+  {
+    "file": "experiments/week1_2.js",
+    "name": "Week 1 - Artwork recreation - #2",
+    "description": "This week, I have tried to recreate the artpiece Gravel by Georg Ness, using randomness"
+  },
+  {
+    "file": "experiments/week2-3.js",
+    "name": "Week 2 - Further Artwork recreation",
     "description": "This week, I have recreated an artpiece by Joshua Davis, using generative methods"
   }
 ]
