@@ -9,7 +9,7 @@ const size = 30; // The avarege size of a circle
 const gap = 8; // distance between the cirlces
 const columnAmount = 7; //number of columns
 const wobble = Math.random(); // random cirlce shape
-const colourPalette = ["#19232e", "#c9d6df", "#f2efe9", "#f28b82"]; // Colours of the columns
+const colourPalette = ["#19232e", "#c9d6df", "#f2efe9", "#d6b588"]; // Colours of the columns
 const bottomMargin = 30;
 
 function setup() {
@@ -24,10 +24,12 @@ function draw() {
   /* Here I center everything in the middle 
   and space the columns evenly across the canvas*/
   for (let i = 0; i < columnAmount; i++) {
+    /* I'm not exactly sure how this works, but ChatGPT told me that I could use "map" in order to remap a number like this:
+    map(value, start1, stop1, start2, stop2, [withinBounds]), and I used this source: https://p5js.org/reference/p5/map */
     const x = map(i + 0.5, 0, columnAmount, 70, W - 70) + random(-15, 15);
     const top = H * 0.1; // starting the column 10% down from the top
     const maxHeight = H - bottomMargin - top;
-    const h = Math.min(maxHeight); // Line 29 and 30 sets a margin at the bottom of the canvas
+    const h = random(100, maxHeight); // Line 29 and 30 sets a margin at the bottom of the canvas
     drawColumn(x, top, h);
   }
 }
@@ -47,8 +49,12 @@ function drawColumn(cx, top, heightPx) {
   const c1 = color(random(colourPalette));
   const c2 = color(random(colourPalette));
 
+  // This line ensures that all columns has a different amount of perlin noise
   const nOff = random(1000);
 
+  /* This works in the way that a column is looped from "top" to "top + heightPx" in steps of "gap"
+  at each step, an ellipse is drawn so that each column is a stack of ellipses.
+  "gap" defines the amount of ellipses */
   for (let y = top; y < top + heightPx; y += gap) {
     const t = (y - top) / heightPx;
     const baseProfile = sin(t * PI); // This makes the column thin at the top and bottom and bulge in the middle
