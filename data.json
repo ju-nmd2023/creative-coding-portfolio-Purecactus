@@ -5,13 +5,18 @@
     "description": "This week, I have tried to recreate the artpiece Gravel by Georg Ness, using randomness"
   },
   {
-    "file": "experiments/week1_2.js",
+    "file": "experiments/week1-ver2.js",
     "name": "Week 1 - Artwork recreation - #2",
-    "description": "This week, I have tried to recreate the artpiece Gravel by Georg Ness, using randomness"
+    "description": "This is another variation of the artipiece where i thought of aligning pebbles in rows, and the further down we go the messier it gets... "
+  },
+  {
+    "file": "experiments/week1-ver3.js",
+    "name": "Week 1 - Artwork recreation - #3",
+    "description": "In this variation i made the colours random in a similiar way that i added jitter and chaos in my recreation. This time I have a rainbow palette that is in its original order at the top row, but the further down we go, the more messed up the order of colours get... "
   },
   {
     "file": "experiments/week2-3.js",
     "name": "Week 2 - Further Artwork recreation",
-    "description": "This week, I have recreated an artpiece by Joshua Davis, using generative methods"
+    "description": "..."
   }
 ]
