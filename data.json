@@ -16,7 +16,22 @@
   },
   {
     "file": "experiments/week2-3.js",
-    "name": "Week 2 - Further Artwork recreation",
+    "name": "Week 2 & 3 - Further recreation - #1",
+    "description": "..."
+  },
+  {
+    "file": "experiments/week2-3-ver2.js",
+    "name": "Week 2 & 3 - Further recreation - #2",
+    "description": "..."
+  },
+  {
+    "file": "experiments/week2-3-ver3.js",
+    "name": "Week 2 & 3 - Further recreation - #3",
+    "description": "..."
+  },
+  {
+    "file": "experiments/week4.js",
+    "name": "Week 4 - Implementing sound",
     "description": "..."
   }
 ]
