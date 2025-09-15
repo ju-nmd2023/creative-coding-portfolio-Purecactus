@@ -2,180 +2,163 @@
 It will probably be easier to do since he has what seems to be python code, or some other code language on his website that shows how to construct
 the flow field, but the hard part will be to accurately translate it to p5.js */
 
+// Variables
 const fieldSize = 50;
-const divider = 4;
-const agentNum = 10;
-const noiseScale = 1 / 300;
-const maxSpeed = 2;
-const maxForce = 0.05;
-const margin = 100;
+const maxColumns = Math.ceil(innerWidth / fieldSize);
+const maxRows = Math.ceil(innerHeight / fieldSize);
+const divider = 8;
+const diagonalAngle = radians(-22);
+const bias = 0.75;
 
-let cols;
-let rows;
-let agents = [];
-let zOff = 0;
-let field;
-
-let frameCounter = 0;
-const maxFrames = 4000;
-
+// Colors
+const BG = "#f8f5ee"; // Tan background
 const palette = [
-  "#e63946",
-  "#f1c40f",
-  "#2a9d8f",
-  "#264653",
-  "#8d99ae",
-  "#6d4c41",
+  "#e63946", // Red
+  "#f1c40f", // Yellow
+  "#2a9d8f", // Light blue
+  "#264653", // Dark blue
+  "#1583c2", // Normal blue
+  "#ef8354", // Orange
+  "#6d4c41", // Brown
 ];
 
-function easeInOut(t) {
-  return sin(t * PI);
-}
-
 class Agent {
-  constructor(x, y, maxSpeed, maxForce) {
+  constructor(x, y, maxSpeed, maxForce, col, w) {
     this.position = createVector(x, y);
-    this.lastPosition = this.position.copy();
+    this.lastPosition = createVector(x, y);
     this.acceleration = createVector(0, 0);
     this.velocity = createVector(0, 0);
     this.maxSpeed = maxSpeed;
     this.maxForce = maxForce;
 
-    // Adding a more handdrawn feel to the flow field
-    this.c = color(random(palette));
-    this.maxW = random(60, 36); // Ribbon style
-    this.life = 0;
-    this.maxLife = int(random(300, 600)); // Ribbon lengths
+    this.col = col;
+    this.w = w;
   }
-  reset() {
-    this.position.set(
-      random(margin, width - margin),
-      random(margin, height - margin)
-    );
-    this.lastPosition.set(this.position);
-    this.velocity.set(0, 0);
-    this.acceleration.set(0, 0);
-    this.c = color(random(palette));
-    this.maxW = random(10, 36);
-    this.life = 0;
-    this.maxLife = int(random(400, 800));
-  }
+
   follow(desiredDirection) {
-    const desired = desiredDirection.copy().mult(this.maxSpeed);
-    const steer = p5.Vector.sub(desired, this.velocity).limit(this.maxForce);
+    desiredDirection = desiredDirection.copy();
+    desiredDirection.mult(this.maxSpeed);
+    let steer = p5.Vector.sub(desiredDirection, this.velocity);
+    steer.limit(this.maxForce);
     this.applyForce(steer);
   }
+
   applyForce(force) {
     this.acceleration.add(force);
   }
+
   update() {
-    this.lastPosition.set(this.position);
-    this.velocity.add(this.acceleration).limit(this.maxSpeed);
+    this.lastPosition = this.position.copy();
+    this.velocity.add(this.acceleration);
+    this.velocity.limit(this.maxSpeed);
     this.position.add(this.velocity);
     this.acceleration.mult(0);
-
-    this.life++;
-    if (this.life > this.maxLife) this.reset();
   }
 
-  // I gave the canvas a margin here to make it look more like an artpiece
   checkBorders() {
-    if (this.position.x < margin) {
-      this.position.x = width - margin;
-      this.lastPosition.x = this.position.x;
-    } else if (this.position.x > width - margin) {
-      this.position.x = margin;
-      this.lastPosition.x = this.position.x;
+    if (this.position.x < 0) {
+      this.position.x = innerWidth;
+      this.lastPosition.x = innerWidth;
+    } else if (this.position.x > innerWidth) {
+      this.position.x = 0;
+      this.lastPosition.x = 0;
     }
-    if (this.position.y < margin) {
-      this.position.y = height - margin;
-      this.lastPosition.y = this.position.y;
-    } else if (this.position.y > height - margin) {
-      this.position.y = margin;
-      this.lastPosition.y = this.position.y;
+    if (this.position.y < 0) {
+      this.position.y = innerHeight;
+      this.lastPosition.y = innerHeight;
+    } else if (this.position.y > innerHeight) {
+      this.position.y = 0;
+      this.lastPosition.y = 0;
     }
   }
-  draw() {
-    const t = this.life / this.maxLife;
-    const w = max(0.7, this.maxW * easeInOut(t));
 
-    stroke(this.c);
-    strokeWeight(w);
-    strokeCap(ROUND);
-    strokeJoin(ROUND);
-    noFill();
+  draw() {
+    stroke(this.col);
+    strokeWeight(this.w);
     line(
       this.lastPosition.x,
       this.lastPosition.y,
       this.position.x,
       this.position.y
     );
-
-    frameCounter++;
-    if (frameCounter > maxFrames) {
-      noLoop();
-      console.log("Drawing complete");
-    }
   }
 }
+
+let field;
+let agents = [];
 
 function setup() {
   createCanvas(innerWidth, innerHeight);
-  pixelDensity(1);
-  background("#fdf6e3");
-  computeGrid();
-  generateField();
+  pixelDensity(2);
+  background(BG);
+  noiseDetail(4, 0.5);
+  noiseSeed(Math.random() * 1e9);
+
+  field = generateField();
   generateAgents();
-}
-
-function draw() {
-  for (const agent of agents) {
-    const cx = constrain(floor(agent.position.x / fieldSize), 0, cols - 1);
-    const cy = constrain(floor(agent.position.y / fieldSize), 0, rows - 1);
-    const desiredDirection = field[cx][cy];
-
-    agent.follow(desiredDirection);
-    agent.update();
-    agent.checkBorders();
-    agent.draw();
-  }
-}
-
-function computeGrid() {
-  cols = max(1, floor(width / fieldSize));
-  rows = max(1, floor(height / fieldSize));
-  field = Array.from({ length: cols }, () => Array(rows));
 }
 
 function generateField() {
-  noiseDetail(4, 0.5);
-  noiseSeed(Math.random() * 100);
-  for (let x = 0; x < cols; x++) {
-    for (let y = 0; y < rows; y++) {
-      const n = noise(
-        (x * fieldSize * noiseScale) / divider,
-        (y * fieldSize * noiseScale) / divider,
-        zOff
-      );
-      const angle = n * TWO_PI;
-      field[x][y] = p5.Vector.fromAngle(angle);
+  const f = [];
+  for (let x = 0; x < maxColumns; x++) {
+    f.push([]);
+    for (let y = 0; y < maxRows; y++) {
+      const n = noise(x / divider, y / divider) * TWO_PI; // your original idea
+      const noiseDir = p5.Vector.fromAngle(n);
+      const diagDir = p5.Vector.fromAngle(diagonalAngle);
+      const dir = p5.Vector.lerp(diagDir, noiseDir, 1.0 - bias).normalize();
+      f[x].push(dir);
     }
   }
+  return f;
 }
 
 function generateAgents() {
-  agents.length = 0;
-  for (let i = 0; i < agentNum; i++) {
-    const x = random(margin, width - margin);
-    const y = random(margin, height - margin);
-    agents.push(new Agent(x, y, maxSpeed, maxForce));
+  agents = [];
+
+  const count = 240;
+  for (let i = 0; i < count; i++) {
+    const t = random();
+    const base = p5.Vector.lerp(
+      // Adding the 20000 instead of 0 kind of started drawing everything off screen
+      createVector(20000, 0),
+      createVector(innerWidth, innerHeight),
+      t
+    );
+    const perp = p5.Vector.fromAngle(diagonalAngle + HALF_PI).mult(
+      (random() - 0.5) * min(width, height) * 0.6
+    );
+    const p = p5.Vector.add(base, perp);
+
+    let w;
+    if (random() < 0.08) w = random(4, 15);
+    else if (random() < 0.6) w = random(0.7, 2.2);
+    else w = random(3, 9);
+
+    const col = random() < 0.2 ? color(BG) : color(random(palette));
+
+    agents.push(new Agent(p.x, p.y, 4, 0.12, col, w));
   }
 }
 
-function windowResized() {
-  resizeCanvas(innerWidth, innerHeight);
-  background("#fdf6e3");
-  computeGrid();
-  generateField();
-  generateAgents();
+function radians(deg) {
+  return (deg * Math.PI) / 180;
+}
+
+function draw() {
+  for (let k = 0; k < 2; k++) {
+    for (let agent of agents) {
+      const gx = constrain(
+        floor(agent.position.x / fieldSize),
+        0,
+        maxColumns - 1
+      );
+      const gy = constrain(floor(agent.position.y / fieldSize), 0, maxRows - 1);
+      const desiredDirection = field[gx][gy];
+      agent.follow(desiredDirection);
+      agent.update();
+      agent.checkBorders();
+      agent.draw();
+    }
+  }
 }
