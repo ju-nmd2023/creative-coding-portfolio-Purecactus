@@ -17,17 +17,17 @@
   {
     "file": "experiments/week2-3.js",
     "name": "Week 2 & 3 - Further recreation - #1",
-    "description": "..."
+    "description": "In this recreation, I have created a flow field, much like one from the artist, Tyler Hobbs"
   },
   {
     "file": "experiments/week2-3-ver2.js",
     "name": "Week 2 & 3 - Further recreation - #2",
-    "description": "..."
+    "description": "In this variation, I have createda particle generator with the same colours as before"
   },
   {
     "file": "experiments/week2-3-ver3.js",
     "name": "Week 2 & 3 - Further recreation - #3",
-    "description": "..."
+    "description": "In this varation, I have created a collision detector that makes balls bounce around inside of a cage, multiplying upon collision"
   },
   {
     "file": "experiments/week4.js",
