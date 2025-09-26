@@ -27,11 +27,11 @@
   {
     "file": "experiments/week2-3-ver3.js",
     "name": "Week 2 & 3 - Further recreation - #3",
-    "description": "In this varation, I have created a collision detector that makes balls bounce around inside of a cage, multiplying upon collision"
+    "description": "In this varation, I have created a collision detector that makes balls bounce around inside of a cage and off of one another"
   },
   {
     "file": "experiments/week4.js",
     "name": "Week 4 - Implementing sound",
-    "description": "..."
+    "description": "This is the same bouncy ball code, but my idea is to have a note play each time that a ball collides with another ball depending on the color of the ball"
   }
 ]

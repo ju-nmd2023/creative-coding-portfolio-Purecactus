@@ -82,20 +82,20 @@ function resolveCollisions(arr) {
     for (let j = i + 1; j < arr.length; j++) {
       const A = arr[i];
       const B = arr[j];
-      let delta = p5.Vector.sub(B.position, A.position);
-      let distance = delta.mag();
+      let offset = p5.Vector.sub(B.position, A.position);
+      let distance = offset.mag();
       const minDistance = A.r + B.r;
 
       // Checking if circles are overlapping
       // Random direction when cirlces overlap as to not cause errors
       if (distance === 0) {
-        delta.set(random(-1, 1), random(-1, 1));
-        distance = delta.mag();
+        offset.set(random(-1, 1), random(-1, 1));
+        distance = offset.mag();
       }
 
       // Pushing circles apart when they overlap
       if (distance < minDistance) {
-        const n = delta.copy().div(distance);
+        const n = offset.copy().div(distance);
         const overlap = minDistance - distance;
 
         // This pushes the circles apart
