@@ -120,6 +120,7 @@ function resolveCollisions(arr) {
   }
 }
 
+//
 function windowResized() {
   resizeCanvas(innerWidth, innerHeight);
 }

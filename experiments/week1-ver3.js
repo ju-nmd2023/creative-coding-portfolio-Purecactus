@@ -54,3 +54,7 @@ function draw() {
     y += size + gap;
   }
 }
+
+function windowResized() {
+  resizeCanvas(innerWidth, innerHeight);
+}

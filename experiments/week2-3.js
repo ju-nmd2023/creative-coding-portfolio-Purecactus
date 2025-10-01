@@ -162,3 +162,7 @@ function draw() {
     }
   }
 }
+
+function windowResized() {
+  resizeCanvas(innerWidth, innerHeight);
+}

@@ -74,3 +74,7 @@ function draw() {
 function mouseClicked() {
   generateParticles(mouseX, mouseY);
 }
+
+function windowResized() {
+  resizeCanvas(innerWidth, innerHeight);
+}
